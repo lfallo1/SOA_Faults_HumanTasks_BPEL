@@ -1,0 +1,206 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Feb 13 12:36:16 EST 2017
+  Author:  lfallo1
+  Type: BPEL 2.0 Process
+  Purpose: Asynchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="BPELProcess1"
+         targetNamespace="http://xmlns.oracle.com/BPEL_Demo_Application/FaultHandlerDemo/BPELProcess1"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/BPEL_Demo_Application/FaultHandlerDemo/BPELProcess1"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension"
+         xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/BPEL_Demo_Application/Project1/SuperheroMissions"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:ns2="http://www.superhero.org"
+         xmlns:task="http://xmlns.oracle.com/bpel/workflow/task"
+         xmlns:taskservice="http://xmlns.oracle.com/bpel/workflow/taskService"
+         xmlns:wfcommon="http://xmlns.oracle.com/bpel/workflow/common">
+
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/BPEL_Demo_Application/FaultHandlerDemo/BPELProcess1" location="../WSDLs/BPELProcess1.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+    <partnerLinks>
+        <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+        <partnerLink name="bpelprocess1_client" partnerLinkType="client:BPELProcess1" myRole="BPELProcess1Provider" partnerRole="BPELProcess1Requester"/>
+        <partnerLink name="SuperheroServiceReference" partnerLinkType="ns1:SuperheroMissions"
+                     partnerRole="SuperheroMissionsProvider"/>
+        <partnerLink name="HumantaskApproveList.TaskService_1" partnerLinkType="taskservice:TaskService"
+                     partnerRole="TaskService" myRole="TaskServiceCallbackListener"/>
+    </partnerLinks>
+
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        VARIABLES                                                        
+        List of messages and XML documents used within this BPEL process 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <variables>
+        <!-- Reference to the message passed as input during initiation -->
+        <variable name="inputVariable" messageType="client:BPELProcess1RequestMessage"/>
+
+        <!-- Reference to the message that will be sent back to the requester during callback -->
+        <variable name="outputVariable" messageType="client:BPELProcess1ResponseMessage"/>
+        <variable name="Invoke1_process_InputVariable" messageType="ns1:SuperheroMissionsRequestMessage"/>
+        <variable name="Invoke1_process_OutputVariable" messageType="ns1:SuperheroMissionsResponseMessage"/>
+        <variable name="HumantaskApproveList1_globalVariable" messageType="taskservice:taskMessage"/>
+    </variables>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+       ORCHESTRATION LOGIC                                               
+       Set of activities coordinating the flow of messages across the    
+       services integrated within this business process                  
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <sequence name="main">
+        <!-- Receive input from requestor. (Note: This maps to operation defined in BPELProcess1.wsdl) -->
+        <receive name="receiveInput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process" variable="inputVariable" createInstance="yes"/>
+        <scope name="Scope1">
+            <faultHandlers>
+                <catchAll>
+                    <assign name="Assign4">
+                        <copy>
+                            <from>"Fault: Captain Justice"</from>
+                            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/ns2:Superhero/ns2:Name</to>
+                        </copy>
+                        <copy>
+                            <from>10</from>
+                            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/ns2:Superhero/ns2:PowerLevel</to>
+                        </copy>
+                    </assign>
+                </catchAll>
+            </faultHandlers>
+            <sequence name="Sequence1">
+                <assign name="Assign2">
+                    <copy>
+                        <from>$inputVariable.payload/ns2:Strength</from>
+                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Invoke1_process_InputVariable.payload/ns2:Strength</to>
+                    </copy>
+                </assign>
+                <invoke name="InvokeSuperheroService" partnerLink="SuperheroServiceReference"
+                        portType="ns1:SuperheroMissions" operation="process"
+                        inputVariable="Invoke1_process_InputVariable" outputVariable="Invoke1_process_OutputVariable"
+                        bpelx:invokeAsDetail="no"/>
+                <assign name="Assign3">
+                    <copy>
+                        <from>$Invoke1_process_OutputVariable.payload</from>
+                        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
+                    </copy>
+                </assign>
+            </sequence>
+        </scope>
+        <scope name="HumantaskApproveList1"
+               xmlns:wf="http://schemas.oracle.com/bpel/extensions/workflow"
+               wf:key="HumantaskApproveList1_globalVariable">
+            <bpelx:annotation>
+                <bpelx:pattern patternName="bpelx:workflow"></bpelx:pattern>
+            </bpelx:annotation>
+            <variables>
+                <variable name="initiateTaskInput" messageType="taskservice:initiateTaskMessage"/>
+                <variable name="initiateTaskResponseMessage" messageType="taskservice:initiateTaskResponseMessage"/>
+            </variables>
+            <sequence>
+                <assign name="HumantaskApproveList1_AssignTaskAttributes">
+                    <copy>
+                        <from>string('Please review mission list')</from>
+                        <to>$initiateTaskInput.payload/task:task/task:title</to>
+                    </copy>
+                    <copy>
+                        <from>number(3)</from>
+                        <to>$initiateTaskInput.payload/task:task/task:priority</to>
+                    </copy>
+                    <copy>
+                        <from>string('Please review mission list')</from>
+                        <to>$initiateTaskInput.payload/task:task/task:title</to>
+                    </copy>
+                    <copy>
+                        <from>number(3)</from>
+                        <to>$initiateTaskInput.payload/task:task/task:priority</to>
+                    </copy>
+                    <copy>
+                        <from><literal><payload xmlns="http://xmlns.oracle.com/bpel/workflow/task">
+ <Parameter1 xmlns="http://xmlns.oracle.com/bpel/workflow/task"/>
+</payload></literal></from>
+                        <to>$initiateTaskInput.payload/task:task/task:payload</to>
+                    </copy>
+                    <copy>
+                        <from>$outputVariable.payload</from>
+                        <to>$initiateTaskInput.payload/task:task/task:payload/task:Parameter1</to>
+                    </copy>
+                </assign>
+                <invoke name="initiateTask_HumantaskApproveList1" partnerLink="HumantaskApproveList.TaskService_1"
+                        operation="initiateTask" portType="taskservice:TaskService" inputVariable="initiateTaskInput"
+                        outputVariable="initiateTaskResponseMessage"/>
+                <receive name="receiveCompletedTask_HumantaskApproveList1"
+                         partnerLink="HumantaskApproveList.TaskService_1" portType="taskservice:TaskServiceCallback"
+                         operation="onTaskCompleted" variable="HumantaskApproveList1_globalVariable"
+                         createInstance="no"/>
+            </sequence>
+        </scope>
+        <if name="taskIf">
+            <documentation>
+                <![CDATA[Task outcome is APPROVE]]>
+            </documentation>
+            <condition>$HumantaskApproveList1_globalVariable.payload/task:systemAttributes/task:outcome = 'APPROVE'</condition>
+            <sequence>
+                <assign name="CopyPayloadFromTask">
+                    <copy>
+                        <from variable="HumantaskApproveList1_globalVariable" part="payload"><query>task:payload/task:Parameter1</query></from>
+                        <to variable="outputVariable" part="payload"/>
+                    </copy>
+                </assign>
+            </sequence>
+            <elseif>
+                <documentation>
+                    <![CDATA[Task outcome is REJECT]]>
+                </documentation>
+                <condition>$HumantaskApproveList1_globalVariable.payload/task:systemAttributes/task:outcome = 'REJECT'</condition>
+                <sequence>
+                    <assign name="CopyPayloadFromTask">
+                        <copy>
+                            <from variable="HumantaskApproveList1_globalVariable" part="payload"><query>task:payload/task:Parameter1</query></from>
+                            <to variable="outputVariable" part="payload"/>
+                        </copy>
+                    </assign>
+                </sequence>
+            </elseif>
+            <else>
+                <sequence>
+                    <assign name="CopyPayloadFromTask">
+                        <copy>
+                            <from variable="HumantaskApproveList1_globalVariable" part="payload"><query>task:payload/task:Parameter1</query></from>
+                            <to variable="outputVariable" part="payload"/>
+                        </copy>
+                    </assign>
+                </sequence>
+            </else>
+        </if>
+        <!-- 
+          Asynchronous callback to the requester. (Note: the callback location and correlation id is transparently handled using WS-addressing.)
+        -->
+        <invoke name="callbackClient" partnerLink="bpelprocess1_client" portType="client:BPELProcess1Callback" operation="processResponse" inputVariable="outputVariable"/>
+    </sequence>
+</process>

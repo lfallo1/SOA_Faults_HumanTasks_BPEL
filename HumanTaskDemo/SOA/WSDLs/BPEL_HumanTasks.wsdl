@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="BPEL_HumanTasks"
+             targetNamespace="http://xmlns.oracle.com/BPEL_Demo_Application/HumanTaskDemo/BPEL_HumanTasks"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:client="http://xmlns.oracle.com/BPEL_Demo_Application/HumanTaskDemo/BPEL_HumanTasks"
+             xmlns:ns1="http://www.example.org"
+             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	TYPE DEFINITION - List of services participating in this BPEL process
+	The default output of the BPEL designer uses strings as input and 
+	output to the BPEL Process. But you can define or import any XML 
+	Schema type and use them as part of the message types.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->   
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://www.example.org" schemaLocation="../Schemas/HumanTasks.xsd" />
+		</schema>
+	</wsdl:types>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MESSAGE TYPE DEFINITION - Definition of the message types used as 
+	part of the port type defintions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->      
+	<wsdl:message name="BPEL_HumanTasksRequestMessage">
+		<wsdl:part name="payload" element="ns1:TaskRequest" />
+	</wsdl:message>
+
+	<wsdl:message name="BPEL_HumanTasksResponseMessage">
+		<wsdl:part name="payload" element="ns1:TaskResponse" />
+	</wsdl:message>
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	PORT TYPE DEFINITION - A port type groups a set of operations into
+	a logical service unit.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- portType implemented by the BPEL_HumanTasks BPEL process -->
+	<wsdl:portType name="BPEL_HumanTasks">
+		<wsdl:operation name="process">
+			<wsdl:input message="client:BPEL_HumanTasksRequestMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- portType implemented by the requester of BPEL_HumanTasks BPEL process
+	for asynchronous callback purposes
+	-->
+	<wsdl:portType name="BPEL_HumanTasksCallback">
+		<wsdl:operation name="processResponse">
+			<wsdl:input message="client:BPEL_HumanTasksResponseMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	PARTNER LINK TYPE DEFINITION
+	the BPEL_HumanTasks partnerLinkType binds the provider and
+	requester portType into an asynchronous conversation.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="BPEL_HumanTasks">
+		<plnk:role name="BPEL_HumanTasksProvider" portType="client:BPEL_HumanTasks"/>
+		<plnk:role name="BPEL_HumanTasksRequester" portType="client:BPEL_HumanTasksCallback"/>
+	</plnk:partnerLinkType>
+</wsdl:definitions>

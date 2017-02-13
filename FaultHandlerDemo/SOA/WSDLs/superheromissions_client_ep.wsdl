@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions
+     name="SuperheroMissions"
+     targetNamespace="http://xmlns.oracle.com/BPEL_Demo_Application/Project1/SuperheroMissions"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:client="http://xmlns.oracle.com/BPEL_Demo_Application/Project1/SuperheroMissions"
+     xmlns:ns1="http://www.superhero.org"
+     xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    >
+    <wsdl:documentation>
+        <abstractWSDL>http://MSI:7001/soa-infra/services/soa12c_batch1/Project1!1.0/WSDLs/SuperheroMissions.wsdl</abstractWSDL>
+    </wsdl:documentation>
+    <plnk:partnerLinkType name="SuperheroMissions">
+        <plnk:role name="SuperheroMissionsProvider" portType="client:SuperheroMissions"/>
+    </plnk:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.superhero.org" schemaLocation="../Schemas/SuperheroMissionSchema.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="SuperheroMissionsRequestMessage">
+        <wsdl:part name="payload" element="ns1:MissionRequest"/>
+    </wsdl:message>
+    <wsdl:message name="SuperheroMissionsResponseMessage">
+        <wsdl:part name="payload" element="ns1:MissionResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="SuperheroMissions">
+        <wsdl:operation name="process">
+            <wsdl:input message="client:SuperheroMissionsRequestMessage"/>
+            <wsdl:output message="client:SuperheroMissionsResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SuperheroMissionsBinding" type="client:SuperheroMissions">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="process">
+            <soap:operation style="document" soapAction="process"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="superheromissions_client_ep">
+        <wsdl:port name="SuperheroMissions_pt" binding="client:SuperheroMissionsBinding">
+            <soap:address location="http://MSI:7001/soa-infra/services/soa12c_batch1/Project1!1.0*soa_966a3438-902e-4dcb-b7d4-bc6d0664fdb3/superheromissions_client_ep"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

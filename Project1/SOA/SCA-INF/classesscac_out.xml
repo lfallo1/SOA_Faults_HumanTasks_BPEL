@@ -1,0 +1,23 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>warning</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='sequence'][@name='main']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='assign'][@name='AssignOutputVariables']/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='copy']</loc>
+      <line>82</line>
+      <col/>
+      <file>BPEL/SuperheroMissions.bpel</file>
+      <name>BPEL/SuperheroMissions.bpel</name>
+      <fix>Types must be compatible.</fix>
+      <msg>The from-spec of "ns3:superheroDbReferenceOutputCollection" is not compatible with to-spec of "ns2:MissionResponse"</msg>
+   </Fault>
+   <Fault>
+      <severity>warning</severity>
+      <loc>/*[namespace-uri()='http://docs.oasis-open.org/wsbpel/2.0/process/executable'][local-name()='process']</loc>
+      <line>31</line>
+      <col/>
+      <file>BPEL/CallAsync.bpel</file>
+      <name>BPEL/CallAsync.bpel</name>
+      <fix>Fix the process to be *either* durable or synchronous.</fix>
+      <msg>Process "CallAsync" is both durable (onMessage,Receive,Wait) and synchronous.</msg>
+   </Fault>
+</Faults>

@@ -1,0 +1,22 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/superheroDbReference" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/superheroDbReference" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="superheroDbReferenceInput" type="superheroDbReferenceInput"/>
+   <xs:complexType name="superheroDbReferenceInput">
+      <xs:sequence>
+         <xs:element name="EnemyPowerLevel" type="xs:decimal"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="superheroDbReferenceOutputCollection" type="superheroDbReferenceOutputCollection"/>
+   <xs:complexType name="superheroDbReferenceOutputCollection">
+      <xs:sequence>
+         <xs:element name="superheroDbReferenceOutput" type="superheroDbReferenceOutput" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="superheroDbReferenceOutput">
+      <xs:sequence>
+         <xs:element name="ID" type="xs:int" />
+         <xs:element name="name" type="xs:string"/>
+         <xs:element name="PowerLevel" type="xs:decimal" />
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

@@ -1,0 +1,16 @@
+<adapter-config name="superheroDbReference" adapter="db" wsdlLocation="../WSDLs/superheroDbReference.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory UIConnectionName="SuperheroConnection" location="eis/DB/SuperheroesMysql"/>
+  <endpoint-interaction portType="superheroDbReference_ptt" operation="superheroDbReference">
+    <interaction-spec className="oracle.tip.adapter.db.DBPureSQLInteractionSpec">
+      <property name="SqlString" value="select * from(
+select ID, name, (intelligence * .1 + strength * .3 + speed * .3 + durability * .2 + energy_Projection * .25 + fighting_Skills * .3)/1.45 as PowerLevel 
+from marvels
+) as SuperheroPowerLevels
+where PowerLevel >= #EnemyPowerLevel
+order by PowerLevel desc"/>
+      <property name="GetActiveUnitOfWork" value="false"/>
+    </interaction-spec>
+  </endpoint-interaction>
+
+</adapter-config>

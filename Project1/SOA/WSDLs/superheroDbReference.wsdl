@@ -1,0 +1,32 @@
+<wsdl:definitions
+     name="superheroDbReference"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/BPEL_Demo_Application/Project1/superheroDbReference"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/BPEL_Demo_Application/Project1/superheroDbReference"
+     xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:db="http://xmlns.oracle.com/pcbpel/adapter/db/superheroDbReference"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="superheroDbReference_plt" >
+    <plt:role name="superheroDbReference_role" >
+      <plt:portType name="tns:superheroDbReference_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/superheroDbReference" schemaLocation="../Schemas/superheroDbReference.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="superheroDbReferenceInput_msg">
+        <wsdl:part name="superheroDbReferenceInput_msg" element="db:superheroDbReferenceInput"/>
+    </wsdl:message>
+    <wsdl:message name="superheroDbReferenceOutputCollection_msg">
+        <wsdl:part name="superheroDbReferenceOutputCollection" element="db:superheroDbReferenceOutputCollection"/>
+    </wsdl:message>
+    <wsdl:portType name="superheroDbReference_ptt">
+        <wsdl:operation name="superheroDbReference">
+            <wsdl:input message="tns:superheroDbReferenceInput_msg"/>
+            <wsdl:output message="tns:superheroDbReferenceOutputCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
