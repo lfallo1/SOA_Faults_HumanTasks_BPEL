@@ -150,6 +150,9 @@
                 </sequence>
             </elseif>
             <else>
+                <documentation>
+                    <![CDATA[Task outcom APPROVE]]>
+                </documentation>
                 <sequence>
                     <assign name="CopyPayloadFromTask">
                         <copy>

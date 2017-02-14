@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://xmlns.oracle.com/adfm/application" version="12.2.1.16.48" id="DataBindings"
+             SeparateXMLFiles="false" Package="humantaskvalidationform" ClientType="Generic">
+  <pageMap>
+    <page path="/Humantask1_TaskDetails.jspx" usageId="humantaskvalidationform_Humantask1_TaskDetailsPageDef"/>
+    <page path="/Humantask1_TaskNotification.jspx"
+          usageId="humantaskvalidationform_Humantask1_TaskNotificationPageDef"/>
+  </pageMap>
+  <pageDefinitionUsages>
+    <page id="humantaskvalidationform_Humantask1_TaskDetailsPageDef"
+          path="humantaskvalidationform.pageDefs.Humantask1_TaskDetailsPageDef"/>
+    <page id="humantaskvalidationform_Humantask1_TaskNotificationPageDef"
+          path="humantaskvalidationform.pageDefs.Humantask1_TaskNotificationPageDef"/>
+  </pageDefinitionUsages>
+  <dataControlUsages>
+    <dc id="HumanTaskValidationForm_Humantask1" path="humantaskvalidationform.HumanTaskValidationForm_Humantask1"/>
+  </dataControlUsages>
+</Application>
